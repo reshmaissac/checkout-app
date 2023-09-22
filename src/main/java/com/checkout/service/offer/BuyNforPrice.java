@@ -12,9 +12,10 @@ public class BuyNforPrice implements ISpecialOffer {
 	}
 
 	@Override
-	public Double findDicsountedPrice() {
-		// TODO Auto-generated method stub
-		return null;
+	public Double getItemDicsountedPrice(int qty, double unitPrice) {
+
+		return qty / offerQuantity * offerPrice + qty % offerQuantity * unitPrice;
+		
 	}
 
 }
