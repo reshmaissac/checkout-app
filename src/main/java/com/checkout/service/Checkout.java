@@ -52,7 +52,9 @@ public class Checkout {
 				// double total = totalPrice + (itemCount * unitPrice);
 				return itemCount * unitPrice;
 			}
-		}
+		} else {
+            //logger.log(Level.WARNING, "Item not found in pricing rules: " + item);
+        }
 		// }
 
 		// apply pricing rules and find total

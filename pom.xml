@@ -1,8 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.checkout</groupId>
-  <artifactId>checkout-app</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>checkout-app</name>
-  <description>checkout-app with pricing rules</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.checkout</groupId>
+	<artifactId>checkout-app</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>checkout-app</name>
+	<description>checkout-app with pricing rules</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
 </project>
+

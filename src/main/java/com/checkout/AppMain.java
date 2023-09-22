@@ -19,14 +19,12 @@ public class AppMain {
 				new PricingRules(new Item('B', 30), new BuyNforPrice(2, 45d)),
 				new PricingRules(new Item('C', 20), null), 
 				new PricingRules(new Item('D', 15), null));
-
-		// methods to get the command line inputs and display output
 		Checkout checkout = new Checkout(pricingRules);
 
 		Scanner scanner = new Scanner(System.in);
 		while (true) {
 
-			System.out.println("Please enter item code (A,B,C,..) or 'exit' to finish : ");
+			System.out.println("Please enter item code (A,B,C,D) or 'exit' to finish : ");
 			String input = scanner.nextLine().toUpperCase();
 
 			// Check if the input is valid (A, B, C, etc.)
@@ -45,7 +43,7 @@ public class AppMain {
 
 					// print running price
 					double totalPrice = checkout.findTotalPrice();
-					System.out.println("Total : " + totalPrice);
+					System.out.println("Total : " + totalPrice + " pence");
 
 				} else {
 
