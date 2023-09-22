@@ -3,44 +3,54 @@ package com.checkout.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.checkout.model.Item;
+import com.checkout.exception.PricingRuleNotFoundException;
 import com.checkout.service.offer.ISpecialOffer;
 
 public class Checkout {
 
-	// add methods to scan items, apply pricing-rules and find total price
-
+	private static final Logger logger = Logger.getLogger(Checkout.class.getName());
 	private Map<Character, Integer> itemCountMap = new HashMap<Character, Integer>();
 	private List<PricingRules> pricingRules;
-	private double totalPrice = 0;
 
 	public Checkout(List<PricingRules> pricingRules) {
 		this.pricingRules = pricingRules;
 	}
 
+	/**
+	 * method to scan items.
+	 * 
+	 * @param itemCode
+	 */
 	public void scan(char itemCode) {
 
 		itemCountMap.put(itemCode, itemCountMap.getOrDefault(itemCode, 0) + 1);
 
 	}
 
+	/**
+	 * method to sum all itemprices.
+	 * 
+	 * @return
+	 */
 	public double findTotalPrice() {
 		return itemCountMap.entrySet().stream()
 				.mapToDouble(itemEntry -> findItemTotalPrice(itemEntry.getKey(), itemEntry.getValue())).sum();
-		// return totalPrice;
 	}
 
+	/**
+	 * method to apply pricing rules and find total of each item.
+	 * 
+	 * @param itemCode
+	 * @param itemCount
+	 * @return
+	 */
 	public double findItemTotalPrice(char itemCode, int itemCount) {
 
-		// itemCountMap
-		// if (itemCountMap.containsKey(item.getItemCode())) {
-
-		// int itemCount = itemCountMap.get(item.getItemCode());
-		// get pricingRule of the item
-		PricingRules pricingRule = findPricingRuleByItemCode(itemCode);
-		if (pricingRule != null) {
+		try {
+			PricingRules pricingRule = findPricingRuleByItemCode(itemCode);
 			// get unit-price of the item
 			double unitPrice = pricingRule.getItem().getUnitPrice();
 			// get special offer
@@ -49,24 +59,20 @@ public class Checkout {
 
 				return specialOffer.getItemDicsountedPrice(itemCount, unitPrice);
 			} else {
-				// double total = totalPrice + (itemCount * unitPrice);
 				return itemCount * unitPrice;
 			}
-		} else {
-            //logger.log(Level.WARNING, "Item not found in pricing rules: " + item);
-        }
-		// }
-
-		// apply pricing rules and find total
+		} catch (PricingRuleNotFoundException e) {
+			logger.log(Level.WARNING, e.getMessage());
+		}
 
 		return 0;
 
 	}
 
-	private PricingRules findPricingRuleByItemCode(char itemCode) {
+	private PricingRules findPricingRuleByItemCode(char itemCode) throws PricingRuleNotFoundException {
 		// return scanned item
 		return pricingRules.stream().filter(offer -> offer.getItem().getItemCode() == itemCode).findFirst()
-				.orElse(null);
+				.orElseThrow(() -> new PricingRuleNotFoundException("Pricing rule not found for item: " + itemCode));
 
 	}
 

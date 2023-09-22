@@ -19,8 +19,8 @@ public class CheckoutTest {
 	@Before
 	public void setUp() {
 		pricingRules = new ArrayList<>();
-		pricingRules.addAll(Arrays.asList(new PricingRules(
-				new Item('A', 50), new BuyNforPrice(3, 130d)),
+		pricingRules.addAll(Arrays.asList(
+				new PricingRules(new Item('A', 50), new BuyNforPrice(3, 130d)),
 				new PricingRules(new Item('B', 30), new BuyNforPrice(2, 45d)),
 				new PricingRules(new Item('C', 20), null), 
 				new PricingRules(new Item('D', 15), null)));
@@ -98,16 +98,18 @@ public class CheckoutTest {
 
 	@Test
 	public void testScanInvalidItemCode() {
-		checkout.scan('1');
+		checkout.scan('1'); // Invalid input for item code
 		double total = checkout.findTotalPrice();
-		assertEquals(0, total, 0.01); // Invalid input for item code
+		assertEquals(0, total, 0.01); 
 	}
+	
+	
 
 	@Test
 	public void testFindTotalWithNoItemCode() {
 
 		double total = checkout.findTotalPrice();
-		assertEquals(0, total, 0.01); // Invalid input for item code
+		assertEquals(0, total, 0.01); 
 	}
 
 }

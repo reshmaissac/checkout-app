@@ -15,7 +15,7 @@ public class BuyNforPrice implements ISpecialOffer {
 	public Double getItemDicsountedPrice(int qty, double unitPrice) {
 
 		return qty / offerQuantity * offerPrice + qty % offerQuantity * unitPrice;
-		
+
 	}
 
 }

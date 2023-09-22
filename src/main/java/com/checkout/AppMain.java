@@ -3,6 +3,8 @@ package com.checkout;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.checkout.model.Item;
 import com.checkout.service.Checkout;
@@ -11,9 +13,12 @@ import com.checkout.service.offer.BuyNforPrice;
 
 public class AppMain {
 
+	private static final Logger logger = Logger.getLogger(AppMain.class.getName());
+	
 	public static void main(String[] args) {
+		
 
-		// load product pricing and offers
+		// load product pricing rules
 		List<PricingRules> pricingRules = Arrays.asList(
 				new PricingRules(new Item('A', 50), new BuyNforPrice(3, 130d)),
 				new PricingRules(new Item('B', 30), new BuyNforPrice(2, 45d)),
@@ -48,6 +53,7 @@ public class AppMain {
 				} else {
 
 					System.out.println("Invalid item code. Please enter a valid item code.");
+					logger.log(Level.WARNING, "Invalid item code.");
 
 				}
 			}

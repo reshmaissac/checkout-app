@@ -4,7 +4,6 @@ public class Item {
 
 	private char itemCode;
 	private double unitPrice;
-	// private SpecialOffer offer;
 	
 	public Item(char itemCode, double price) {
 		this.itemCode = itemCode;
