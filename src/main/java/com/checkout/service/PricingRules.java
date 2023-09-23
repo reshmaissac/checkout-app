@@ -1,7 +1,7 @@
 package com.checkout.service;
 
 import com.checkout.model.Item;
-import com.checkout.service.offer.ISpecialOffer;
+import com.checkout.offer.ISpecialOffer;
 
 public class PricingRules {
 

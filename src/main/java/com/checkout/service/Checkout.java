@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.checkout.exception.PricingRuleNotFoundException;
-import com.checkout.service.offer.ISpecialOffer;
+import com.checkout.offer.ISpecialOffer;
 
 public class Checkout {
 
@@ -26,7 +26,15 @@ public class Checkout {
 	 */
 	public void scan(char itemCode) {
 
-		itemCountMap.put(itemCode, itemCountMap.getOrDefault(itemCode, 0) + 1);
+		try {
+			if (findPricingRuleByItemCode(itemCode) != null) {
+
+				itemCountMap.put(itemCode, itemCountMap.getOrDefault(itemCode, 0) + 1);
+			}
+		} catch (PricingRuleNotFoundException e) {
+
+			logger.log(Level.WARNING, e.getMessage());
+		}
 
 	}
 
@@ -57,12 +65,14 @@ public class Checkout {
 			ISpecialOffer specialOffer = pricingRule.getSpecialOffer();
 			if (specialOffer != null) {
 
-				return specialOffer.getItemDicsountedPrice(itemCount, unitPrice);
+				return specialOffer.applyOffer(itemCount, unitPrice);
 			} else {
 				return itemCount * unitPrice;
 			}
 		} catch (PricingRuleNotFoundException e) {
+
 			logger.log(Level.WARNING, e.getMessage());
+
 		}
 
 		return 0;

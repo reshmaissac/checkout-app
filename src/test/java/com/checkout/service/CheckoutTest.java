@@ -10,9 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.checkout.model.Item;
-import com.checkout.service.offer.BuyNforPrice;
+import com.checkout.offer.BuyNforPrice;
 
 public class CheckoutTest {
+	
 	Checkout checkout;
 	private List<PricingRules> pricingRules;
 

@@ -1,29 +1,20 @@
 package com.checkout;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.checkout.model.Item;
 import com.checkout.service.Checkout;
 import com.checkout.service.PricingRules;
-import com.checkout.service.offer.BuyNforPrice;
+import com.checkout.util.AppUtil;
 
 public class AppMain {
 
 	private static final Logger logger = Logger.getLogger(AppMain.class.getName());
-	
-	public static void main(String[] args) {
-		
 
-		// load product pricing rules
-		List<PricingRules> pricingRules = Arrays.asList(
-				new PricingRules(new Item('A', 50), new BuyNforPrice(3, 130d)),
-				new PricingRules(new Item('B', 30), new BuyNforPrice(2, 45d)),
-				new PricingRules(new Item('C', 20), null), 
-				new PricingRules(new Item('D', 15), null));
+	public static void main(String[] args) {
+
+		List<PricingRules> pricingRules = AppUtil.loadPricingRules(); // load product pricing rules
 		Checkout checkout = new Checkout(pricingRules);
 
 		Scanner scanner = new Scanner(System.in);
@@ -32,28 +23,25 @@ public class AppMain {
 			System.out.println("Please enter item code (A,B,C,D) or 'exit' to finish : ");
 			String input = scanner.nextLine().toUpperCase();
 
-			// Check if the input is valid (A, B, C, etc.)
 			if (input.equalsIgnoreCase("EXIT")) {
-
+				
+				AppUtil.printBill(checkout); // print price details
 				break;
 
 			} else {
+
 				char scannedItemCode = input.charAt(0);
-				if (Character.isLetter(scannedItemCode)) {
+				// Check if the input is valid (A, B, C, etc.)
+				if (AppUtil.isValidItem(scannedItemCode)) {
 
-					// scan item
-					checkout.scan(scannedItemCode);
-					System.out.println("Item " + scannedItemCode + " , Qty : "
-							+ checkout.getItemCountMap().getOrDefault(scannedItemCode, 0));
+					checkout.scan(scannedItemCode); // scan item
 
-					// print running price
-					double totalPrice = checkout.findTotalPrice();
-					System.out.println("Total : " + totalPrice + " pence");
+					AppUtil.printBill(checkout); // print price details
 
 				} else {
 
-					System.out.println("Invalid item code. Please enter a valid item code.");
-					logger.log(Level.WARNING, "Invalid item code.");
+					AppUtil.errorMessage("Invalid item code. Please enter a valid item code.");
+					logger.log(Level.WARNING, "Invalid Item Code");
 
 				}
 			}

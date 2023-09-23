@@ -1,4 +1,4 @@
-package com.checkout.service.offer;
+package com.checkout.offer;
 
 public class BuyNforPrice implements ISpecialOffer {
 
@@ -12,7 +12,7 @@ public class BuyNforPrice implements ISpecialOffer {
 	}
 
 	@Override
-	public Double getItemDicsountedPrice(int qty, double unitPrice) {
+	public Double applyOffer(int qty, double unitPrice) {
 
 		return qty / offerQuantity * offerPrice + qty % offerQuantity * unitPrice;
 
