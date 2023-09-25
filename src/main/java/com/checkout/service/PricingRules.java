@@ -1,24 +1,23 @@
 package com.checkout.service;
 
-import com.checkout.model.Item;
 import com.checkout.offer.ISpecialOffer;
 
 public class PricingRules {
 
-	private Item item;
+	private char itemCode;
 	private ISpecialOffer specialOffer;
 
-	public PricingRules(Item item, ISpecialOffer specialOffer) {
-		this.item = item;
+	public PricingRules(char itemCode, ISpecialOffer specialOffer) {
+		this.itemCode = itemCode;
 		this.specialOffer = specialOffer;
 	}
 
-	public Item getItem() {
-		return item;
+	public char getItemCode() {
+		return itemCode;
 	}
 
-	public void setItem(Item item) {
-		this.item = item;
+	public void setItemCode(char itemCode) {
+		this.itemCode = itemCode;
 	}
 
 	public ISpecialOffer getSpecialOffer() {

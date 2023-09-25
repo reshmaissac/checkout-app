@@ -3,10 +3,12 @@ package com.checkout.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.checkout.exception.PricingRuleNotFoundException;
+import com.checkout.model.Product;
 import com.checkout.offer.ISpecialOffer;
 
 public class Checkout {
@@ -14,26 +16,27 @@ public class Checkout {
 	private static final Logger logger = Logger.getLogger(Checkout.class.getName());
 	private Map<Character, Integer> itemCountMap = new HashMap<Character, Integer>();
 	private List<PricingRules> pricingRules;
+	private Stock stock;
 
-	public Checkout(List<PricingRules> pricingRules) {
+	public Checkout(List<PricingRules> pricingRules, Stock stock) {
+		this.stock = stock;
 		this.pricingRules = pricingRules;
 	}
 
 	/**
-	 * method to scan items.
+	 * method to scan and add item to basket(hashmap).
 	 * 
 	 * @param itemCode
 	 */
 	public void scan(char itemCode) {
 
-		try {
-			if (findPricingRuleByItemCode(itemCode) != null) {
+		if (stock.getProduct(itemCode).isPresent()) {
 
-				itemCountMap.put(itemCode, itemCountMap.getOrDefault(itemCode, 0) + 1);
-			}
-		} catch (PricingRuleNotFoundException e) {
+			itemCountMap.put(itemCode, itemCountMap.getOrDefault(itemCode, 0) + 1);
 
-			logger.log(Level.WARNING, e.getMessage());
+		} else {
+			logger.log(Level.WARNING, "Invalid Item");
+			
 		}
 
 	}
@@ -58,16 +61,21 @@ public class Checkout {
 	public double findItemTotalPrice(char itemCode, int itemCount) {
 
 		try {
-			PricingRules pricingRule = findPricingRuleByItemCode(itemCode);
-			// get unit-price of the item
-			double unitPrice = pricingRule.getItem().getUnitPrice();
-			// get special offer
-			ISpecialOffer specialOffer = pricingRule.getSpecialOffer();
-			if (specialOffer != null) {
 
-				return specialOffer.applyOffer(itemCount, unitPrice);
-			} else {
-				return itemCount * unitPrice;
+			// get unit-price of the item
+			Optional<Product> product = stock.getProduct(itemCode);
+			if (product.isPresent()) {
+
+				double unitPrice = product.get().getUnitPrice();
+				// get special offer rules for the item
+				PricingRules pricingRule = findPricingRuleByItemCode(itemCode);
+				ISpecialOffer specialOffer = pricingRule.getSpecialOffer();
+				if (specialOffer != null) {
+
+					return specialOffer.applyOffer(itemCount, unitPrice);
+				} else {
+					return itemCount * unitPrice;
+				}
 			}
 		} catch (PricingRuleNotFoundException e) {
 
@@ -79,9 +87,15 @@ public class Checkout {
 
 	}
 
+	/**
+	 * method to find offer rules associated with the scanned item.
+	 * 
+	 * @param itemCode
+	 * @return
+	 * @throws PricingRuleNotFoundException
+	 */
 	private PricingRules findPricingRuleByItemCode(char itemCode) throws PricingRuleNotFoundException {
-		// return scanned item
-		return pricingRules.stream().filter(offer -> offer.getItem().getItemCode() == itemCode).findFirst()
+		return pricingRules.stream().filter(offer -> offer.getItemCode() == itemCode).findFirst()
 				.orElseThrow(() -> new PricingRuleNotFoundException("Pricing rule not found for item: " + itemCode));
 
 	}

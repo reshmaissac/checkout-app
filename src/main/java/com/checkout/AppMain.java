@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import com.checkout.service.Checkout;
 import com.checkout.service.PricingRules;
+import com.checkout.service.Stock;
 import com.checkout.util.AppUtil;
 
 public class AppMain {
@@ -14,8 +16,9 @@ public class AppMain {
 
 	public static void main(String[] args) {
 
+		Stock stock = AppUtil.addProductsToStore(); // add stock
 		List<PricingRules> pricingRules = AppUtil.loadPricingRules(); // load product pricing rules
-		Checkout checkout = new Checkout(pricingRules);
+		Checkout checkout = new Checkout(pricingRules, stock);
 
 		Scanner scanner = new Scanner(System.in);
 		while (true) {
@@ -24,14 +27,14 @@ public class AppMain {
 			String input = scanner.nextLine().toUpperCase();
 
 			if (input.equalsIgnoreCase("EXIT")) {
-				
+
 				AppUtil.printBill(checkout); // print price details
 				break;
 
-			} else {
+			} else if (!input.isEmpty()) {
 
 				char scannedItemCode = input.charAt(0);
-				// Check if the input is valid (A, B, C, etc.)
+
 				if (AppUtil.isValidItem(scannedItemCode)) {
 
 					checkout.scan(scannedItemCode); // scan item

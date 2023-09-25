@@ -2,23 +2,53 @@ package com.checkout.util;
 
 import java.util.Arrays;
 import java.util.List;
-import com.checkout.model.Item;
+
+import com.checkout.model.Product;
 import com.checkout.offer.BuyNforPrice;
 import com.checkout.service.Checkout;
 import com.checkout.service.PricingRules;
+import com.checkout.service.Stock;
 
 public class AppUtil {
-
-	public static List<PricingRules> loadPricingRules() {
+	
+	/**
+	 * add products to stock.
+	 * @return
+	 */
+	public static Stock addProductsToStore() {
+		Stock stock = new Stock();
 		
+		List<Product> products = Arrays.asList(
+				new Product('A', 50), 
+				new Product('B', 30), 
+				new Product('C', 20),
+				new Product('D', 15));
+		
+		stock.addProducts(products);
+		
+		return stock;
+	}
+
+	/**
+	 * fetch pricing rules at checkout. 
+	 * @return
+	 */
+	public static List<PricingRules> loadPricingRules() {
+
 		List<PricingRules> pricingRules = Arrays.asList(
-				new PricingRules(new Item('A', 50), new BuyNforPrice(3, 130d)),
-				new PricingRules(new Item('B', 30), new BuyNforPrice(2, 45d)),
-				new PricingRules(new Item('C', 20), null), 
-				new PricingRules(new Item('D', 15), null));
+				new PricingRules('A', new BuyNforPrice(3, 130d)),
+				new PricingRules('B', new BuyNforPrice(2, 45d)), 
+				new PricingRules('C', null),
+				new PricingRules('D', null));
+
 		return pricingRules;
 	}
 
+	/**
+	 * check if the input is valid (A, B, C, etc.).
+	 * @param scannedItemCode
+	 * @return
+	 */
 	public static boolean isValidItem(char scannedItemCode) {
 		if (Character.isLetter(scannedItemCode)) {
 			return true;
@@ -26,6 +56,10 @@ public class AppUtil {
 		return false;
 	}
 
+	/**
+	 * method to print bill at checkout.
+	 * @param checkout
+	 */
 	public static void printBill(Checkout checkout) {
 		System.out.println("Item: " + "  Qty: " + "  Price: ");
 
@@ -43,6 +77,10 @@ public class AppUtil {
 		System.out.println();
 	}
 
+	/**
+	 * method to print error messages.
+	 * @param error
+	 */
 	public static void errorMessage(String error) {
 		System.out.println(error);
 		System.out.println();

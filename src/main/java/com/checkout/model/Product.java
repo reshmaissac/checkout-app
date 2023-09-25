@@ -1,11 +1,11 @@
 package com.checkout.model;
 
-public class Item {
+public class Product {
 
 	private char itemCode;
 	private double unitPrice;
 	
-	public Item(char itemCode, double price) {
+	public Product(char itemCode, double price) {
 		this.itemCode = itemCode;
 		this.unitPrice = price;
 	}

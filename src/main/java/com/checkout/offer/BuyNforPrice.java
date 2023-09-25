@@ -11,6 +11,9 @@ public class BuyNforPrice implements ISpecialOffer {
 
 	}
 
+	/**
+	 * method to get the discounted price of item after applying offer rule.
+	 */
 	@Override
 	public Double applyOffer(int qty, double unitPrice) {
 
